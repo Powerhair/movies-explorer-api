@@ -12,5 +12,5 @@ Backend http://api.diploma.nomoredomains.monster/
 ## Запуск проекта
 
 `npm run start` — запускает сервер
-`npm run dev` — запускает сервер с hot-reload
+`npm run dev` — запускаaет сервер с hot-reload
 
