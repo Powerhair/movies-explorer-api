@@ -6,6 +6,7 @@ const {
   FILMS_EMPTY, FILMS_INCORRECT_DATA, FILMS_NOT_FOUND, FILMS_NOT_OWNER, FILMS_INVALID_UD,
 } = require('../utils/constants');
 
+// GET /movies — возвращает все сохранённые текущим  пользователем фильмы
 module.exports.getMovies = (req, res, next) => {
   Movies.find({ owner: req.user._id })
     .then((movies) => {
@@ -17,6 +18,7 @@ module.exports.getMovies = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+//  POST /movies — создаёт фильм с переданными в теле
 module.exports.postMovies = (req, res, next) => {
   const {
     country,
@@ -56,6 +58,7 @@ module.exports.postMovies = (req, res, next) => {
     });
 };
 
+// удаляет сохранённый фильм по id  DELETE /movies/_id
 module.exports.deleteMovies = (req, res, next) => {
   Movies.findById(req.params.movieId)
     .orFail(() => {

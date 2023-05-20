@@ -11,6 +11,7 @@ const {
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+// post/signup
 module.exports.createUser = (req, res, next) => {
   const {
     name, email, password,
@@ -37,6 +38,7 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 
+// post/signin
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -50,6 +52,7 @@ module.exports.login = (req, res, next) => {
     });
 };
 
+// GET /users — возвращает пользователя
 module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
@@ -61,6 +64,7 @@ module.exports.getUser = (req, res, next) => {
     .catch((err) => next(err));
 };
 
+// PATCH /users/me — обновляет профиль
 module.exports.updateUser = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
@@ -71,7 +75,9 @@ module.exports.updateUser = (req, res, next) => {
       return res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        next(new DuplicateError(USER_ALREADY_EXISTS));
+      } else if (err.name === 'ValidationError') {
         next(new BadRequestError(USER_INCORRECT_DATA__UPDATE));
       } else {
         next(err);
